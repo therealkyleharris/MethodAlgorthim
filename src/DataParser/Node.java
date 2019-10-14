@@ -3,9 +3,9 @@ package DataParser;
 import java.util.ArrayList;
 
 public class Node {
-	String name, id; 
-	ArrayList<Node> children = new ArrayList<Node>();
-	ArrayList<Node> parents = new ArrayList<Node>();
+	public String name, id; 
+	public ArrayList<Node> children = new ArrayList<Node>();
+	public ArrayList<Node> parents = new ArrayList<Node>();
 	
 	public Node(String name, String id) {
 		this.name = name;

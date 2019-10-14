@@ -19,7 +19,7 @@ public class DataParser {
 		}
 	}
 	
-	private static void readFile(String filename, int idColumn, int nameColumn, int childColumn) throws IOException{
+	public static HashMap<String, Node> readFile(String filename, int idColumn, int nameColumn, int childColumn) throws IOException{
 		HashMap<String, Node> tree = new HashMap<>();
 		
 		File csvData = new File(filename);
@@ -49,6 +49,6 @@ public class DataParser {
 				child.parents.add(parent);
 			}
 		}
-		return;
+		return tree;
 	}
 }
