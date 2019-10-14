@@ -12,19 +12,19 @@ import org.apache.commons.csv.CSVRecord;
 public class DataParser {
 	public static void main(String[] args) {
 		try {
-			readFile("TimeCoreData.csv", 6, 1, 3, 5);
+			readFile("TimeCoreData.csv", 2, 1, 5);
 			System.out.println("Done");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private static void readFile(String filename, int idColumn, int nameColumn, int ascendantColumn, int descendantColumn) throws IOException{
+	private static void readFile(String filename, int idColumn, int nameColumn, int childColumn) throws IOException{
 		HashMap<String, Node> tree = new HashMap<>();
 		
 		File csvData = new File(filename);
 		CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
-		//First pass - 
+		//First pass - create Nodes for all Nodes
 		boolean firstRow = true;
 		for (CSVRecord row : parser) {
 			if (firstRow) {
@@ -33,10 +33,21 @@ public class DataParser {
 			}
 			String id = row.get(idColumn);
 			String name = row.get(nameColumn);
-			String[] ascendantIDs = row.get(ascendantColumn).split(",");
-			String[] descendantIDs = row.get(descendantColumn).split(",");
 			Node node = new Node(name, id);
 			tree.put(id, node);
+		}
+		//Second Pass - link descendants to methods
+		parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.RFC4180);
+		for (CSVRecord row : parser) {
+			String id = row.get(idColumn);
+			String[] childIDs = row.get(childColumn).split(",");
+			for (String childID : childIDs) {
+				Node parent = tree.get(id);
+				Node child = tree.get(childID);
+				if (child == null) continue;
+				parent.children.add(child);
+				child.parents.add(parent);
+			}
 		}
 		return;
 	}

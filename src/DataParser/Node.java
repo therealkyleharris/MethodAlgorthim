@@ -14,6 +14,6 @@ public class Node {
 	
 	@Override
 	public String toString() {
-		return id + " - " + name;
+		return id + " - P:" + parents.size() + ", C:" + children.size() + " - " + name;
 	}
 }
