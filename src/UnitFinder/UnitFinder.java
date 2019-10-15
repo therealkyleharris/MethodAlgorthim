@@ -21,11 +21,13 @@ public class UnitFinder {
 				//instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
 				//instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
 				//instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
+				instanceId = "18$77262";
 				Node startingMethod = tree.get(instanceId);
 
 				HashSet <Node> unit = findUnit(startingMethod);
+				HashSet<Node> unitTrimmed = removeExternalParentsAndChildren(unit);
 
-				for (Node node:unit){
+				for (Node node:unitTrimmed){
 					System.out.println(node);
 				}
 
@@ -37,7 +39,7 @@ public class UnitFinder {
 		System.out.println("Unit Finder Done");
 	}
 	
-	private static HashSet<Node> findUnit(Node startingMethod) {
+	protected static HashSet<Node> findUnit(Node startingMethod) {
 		//Get a list for all local roots above the given method
 		if (startingMethod == null) return new HashSet<Node>();
 		HashSet<Node> localRoots = new HashSet<Node>();
@@ -48,6 +50,9 @@ public class UnitFinder {
 		HashSet<Node> bestUnit = null; 
 		
 		for (Node localRoot : localRoots) {
+			if (localRoot == startingMethod) {
+				int i = 0;
+			}
 			//For each local parent, get all methods it calls.
 			HashSet<Node> unit = new HashSet<>();
 			findAllDescendantsOfMethod(localRoot, unit);
@@ -61,8 +66,7 @@ public class UnitFinder {
 				bestUnit = unit;
 			}
 		}
-		HashSet<Node> bestUnitTrimmed = removeExternalParentsAndChildren(bestUnit);
-		return bestUnitTrimmed;
+		return bestUnit;
 	}
 	
 	private static void findAllLocalParentsForMethod(Node startingMethod, Node currentMethod, HashSet<Node> localRoots, HashSet<Node> visitedMethods) {
@@ -78,6 +82,11 @@ public class UnitFinder {
 		}
 	}
 	
+	/**
+	 * Return all descendants of a method INCLUDING ITSELF
+	 * @param currentMethod
+	 * @param descendants
+	 */
 	private static void findAllDescendantsOfMethod(Node currentMethod, HashSet<Node> descendants){
 		if (descendants.contains(currentMethod)) return;
 		descendants.add(currentMethod);
@@ -94,7 +103,7 @@ public class UnitFinder {
 	 * @return
 	 */
 	private static void trimListToAUnit(HashSet<Node> list, Node root) {
-		ArrayList<Node> nodesWithOutsideCallers = new ArrayList<Node>();
+		HashSet<Node> nodesWithOutsideCallers = new HashSet<Node>();
 		//For all nodes
 		for (Node node : list) {
 			if (node == root) continue;
@@ -112,6 +121,14 @@ public class UnitFinder {
 			findAllDescendantsOfMethod(node, descendants);
 			list.removeAll(descendants);
 		}
+		
+		//Sometimes, a root node can get removed (if it is in a loop with a child, and a child has an external caller)
+		//If that happens, there will be nothing left in the list.
+		//Re-add the root node to get the correct answer to this situation.
+		if (list.isEmpty()) {
+			list.add(root);
+		}
+		
 		return;
 	}
 	
