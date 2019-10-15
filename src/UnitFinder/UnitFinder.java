@@ -10,21 +10,20 @@ import DataParser.Node;
 
 public class UnitFinder {
 	public static void main(String[] args) {
-
 		String instanceId = "";
 		Scanner sc = new Scanner(System.in);
 
 		while(!instanceId.equalsIgnoreCase("quit")) {
-
+			System.out.print("Enter Method ID (or quit): ");
 			instanceId = sc.nextLine();
 
 			try {
 				HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
-				//String startingMethodID = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
-				//String startingMethodID = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
-				//String startingMethodID = "19$144751";	//get Down Traversal -2(SS), 19$144751
-				String startingMethodID = instanceId;        //get Down Traversal 3(SS)*S, 19$144732
-				Node startingMethod = tree.get(startingMethodID);
+				//instanceId = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
+				//instanceId = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
+				//instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
+				//instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
+				Node startingMethod = tree.get(instanceId);
 
 				HashSet <Node> unit = findUnit(startingMethod);
 
@@ -35,8 +34,9 @@ public class UnitFinder {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			//System.out.println("Unit Finder Done");
 		}
+		sc.close();
+		System.out.println("Unit Finder Done");
 	}
 	
 	private static HashSet<Node> findUnit(Node startingMethod) {
@@ -63,7 +63,8 @@ public class UnitFinder {
 				bestUnit = unit;
 			}
 		}
-		return bestUnit;
+		HashSet<Node> bestUnitTrimmed = removeExternalParentsAndChildren(bestUnit);
+		return bestUnitTrimmed;
 	}
 	
 	private static void findAllLocalParentsForMethod(Node startingMethod, Node currentMethod, HashSet<Node> localRoots, HashSet<Node> visitedMethods) {
@@ -114,5 +115,37 @@ public class UnitFinder {
 			list.removeAll(descendants);
 		}
 		return;
+	}
+	
+	/**
+	 * Starting with a list of Nodes, return a list of new Nodes that only have parents and children on the original list.
+	 * The original Nodes are not modified, so that they can be reused later
+	 * @param origList
+	 * @return
+	 */
+	private static HashSet<Node> removeExternalParentsAndChildren(HashSet<Node> origList) {
+		HashMap<String, Node> trimmedMap = new HashMap<String, Node>();
+		//First pass - duplicate and save nodes against their IDs
+		for (Node origNode : origList) {
+			Node newNode = new Node(origNode.name, origNode.id);
+			trimmedMap.put(newNode.id, newNode);
+		}
+		
+		//Second pass - duplicate Parent and Children lists, but only allow Nodes from the original list
+		for (Node origNode : origList) {
+			Node newNode = trimmedMap.get(origNode.id);
+			for (Node parent : origNode.parents) {
+				if (origList.contains(parent)) {
+					newNode.parents.add(parent);
+				}
+			}
+			for (Node child : origNode.children) {
+				if (origList.contains(child)) {
+					newNode.children.add(child);
+				}
+			}
+		}
+		HashSet<Node> newList = new HashSet<Node>(trimmedMap.values());
+		return newList;
 	}
 }
