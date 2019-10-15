@@ -5,6 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ConsistencyTest {
+	/**
+	 * 1 For each method, get its unit.
+	 * 2 For each method in the unit, get it's unit
+	 * 3 Verify that the above 2 units are the same
+	 * 
+	 * In step 1, skip all methods that have already been tested in step 2 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
 			HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
@@ -17,7 +25,7 @@ public class ConsistencyTest {
 					System.out.println(count-1);
 				}
 				if (testedMethodIDs.contains(methodID)) {
-					System.out.println("Skip");
+					//System.out.println("Skip");
 					continue;
 				}
 				Node method = tree.get(methodID);
