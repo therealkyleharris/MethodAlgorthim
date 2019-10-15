@@ -21,7 +21,8 @@ public class UnitFinder {
 				//instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
 				//instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
 				//instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
-				instanceId = "18$77262";
+				//instanceId = "18$77262";	//Former Null Unit
+				//instanceId = "26$87467";	//Former Null Unit
 				Node startingMethod = tree.get(instanceId);
 
 				HashSet <Node> unit = findUnit(startingMethod);
@@ -50,9 +51,6 @@ public class UnitFinder {
 		HashSet<Node> bestUnit = null; 
 		
 		for (Node localRoot : localRoots) {
-			if (localRoot == startingMethod) {
-				int i = 0;
-			}
 			//For each local parent, get all methods it calls.
 			HashSet<Node> unit = new HashSet<>();
 			findAllDescendantsOfMethod(localRoot, unit);
@@ -80,6 +78,19 @@ public class UnitFinder {
 		for (Node parent : parents) {
 			findAllLocalParentsForMethod(startingMethod, parent, localRoots, visitedMethods);
 		}
+	}
+	
+	/**
+	 * Find all descendants of a method INCLUDING ITSELF
+	 * While traversing descendants, do not enter a specific note
+	 * @param currentMethod
+	 * @param descendants
+	 * @param block
+	 */
+	private static void findAllDescendantsOfMethodWithBlock(Node currentMethod, HashSet<Node> descendants, Node block){
+		descendants.add(block);
+		findAllDescendantsOfMethod(currentMethod, descendants);
+		descendants.remove(block);
 	}
 	
 	/**
@@ -118,15 +129,10 @@ public class UnitFinder {
 		//For all nodes to be removed
 		for (Node node : nodesWithOutsideCallers) {
 			HashSet<Node> descendants = new HashSet<Node>();
-			findAllDescendantsOfMethod(node, descendants);
+			//Get all descendants of a node with outside callers
+			//BUT do not loop back to the unit root
+			findAllDescendantsOfMethodWithBlock(node, descendants, root);
 			list.removeAll(descendants);
-		}
-		
-		//Sometimes, a root node can get removed (if it is in a loop with a child, and a child has an external caller)
-		//If that happens, there will be nothing left in the list.
-		//Re-add the root node to get the correct answer to this situation.
-		if (list.isEmpty()) {
-			list.add(root);
 		}
 		
 		return;
