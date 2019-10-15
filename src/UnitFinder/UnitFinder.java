@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import DataParser.DataParser;
-import DataParser.Node;
-
 public class UnitFinder {
 	public static void main(String[] args) {
 		String instanceId = "";
@@ -23,6 +20,7 @@ public class UnitFinder {
 				//instanceId = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
 				//instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
 				//instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
+				//instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
 				Node startingMethod = tree.get(instanceId);
 
 				HashSet <Node> unit = findUnit(startingMethod);
