@@ -3,29 +3,45 @@ package UnitFinder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Scanner;
 
 import DataParser.DataParser;
 import DataParser.Node;
 
 public class UnitFinder {
 	public static void main(String[] args) {
-		try {
-			HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
-			//String startingMethodID = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
-			//String startingMethodID = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
-			//String startingMethodID = "19$144751";	//get Down Traversal -2(SS), 19$144751
-			String startingMethodID = "19$144732";		//get Down Traversal 3(SS)*S, 19$144732
-			Node startingMethod = tree.get(startingMethodID);
-			findUnit(startingMethod);
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		String instanceId = "";
+		Scanner sc = new Scanner(System.in);
+
+		while(!instanceId.equalsIgnoreCase("quit")) {
+
+			instanceId = sc.nextLine();
+
+			try {
+				HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
+				//String startingMethodID = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
+				//String startingMethodID = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
+				//String startingMethodID = "19$144751";	//get Down Traversal -2(SS), 19$144751
+				String startingMethodID = instanceId;        //get Down Traversal 3(SS)*S, 19$144732
+				Node startingMethod = tree.get(startingMethodID);
+
+				HashSet <Node> unit = findUnit(startingMethod);
+
+				for (Node node:unit){
+					System.out.println(node);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			//System.out.println("Unit Finder Done");
 		}
-		System.out.println("Unit Finder Done");
 	}
 	
 	private static HashSet<Node> findUnit(Node startingMethod) {
 		//Get a list for all local roots above the given method
-		if (startingMethod == null) return null;
+		if (startingMethod == null) return new HashSet<Node>();
 		HashSet<Node> localRoots = new HashSet<Node>();
 		HashSet<Node> visitedMethods = new HashSet<Node>();
 		findAllLocalParentsForMethod(startingMethod, startingMethod, localRoots, visitedMethods);

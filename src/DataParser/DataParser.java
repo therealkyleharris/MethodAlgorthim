@@ -10,14 +10,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class DataParser {
-	public static void main(String[] args) {
-		try {
-			readFile("TimeCoreData.csv", 2, 1, 5);
-			System.out.println("Done");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
 	
 	public static HashMap<String, Node> readFile(String filename, int idColumn, int nameColumn, int childColumn) throws IOException{
 		HashMap<String, Node> tree = new HashMap<>();
