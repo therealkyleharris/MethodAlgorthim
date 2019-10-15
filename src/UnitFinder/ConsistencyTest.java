@@ -29,9 +29,9 @@ public class ConsistencyTest {
 					continue;
 				}
 				Node method = tree.get(methodID);
-				HashSet<Node> unit = UnitFinder.findUnit(method);
+				Unit unit = UnitFinder.findUnit(method);
 				verifyUnitConsistency(methodID, unit);
-				for (Node node : unit) {
+				for (Node node : unit.getNodes()) {
 					testedMethodIDs.add(node.id);
 				}
 			}
@@ -42,13 +42,13 @@ public class ConsistencyTest {
 		
 	}
 	
-	private static void verifyUnitConsistency(String originalMethodID, HashSet<Node> unit) throws Exception{
+	private static void verifyUnitConsistency(String originalMethodID, Unit unit) throws Exception{
 		if (unit == null) {
 			throw new Exception("Method " + originalMethodID + " returned null Unit");
 		}
-		for (Node node : unit) {
-			HashSet<Node> comparisonUnit = UnitFinder.findUnit(node);
-			if (!unit.equals(comparisonUnit)) {
+		for (Node node : unit.getNodes()) {
+			Unit comparisonUnit = UnitFinder.findUnit(node);
+			if (!unit.areNodesIdentical(comparisonUnit)) {
 				throw new Exception("Inconsistency Found Between Units For " + originalMethodID + " and " + node.id);
 			}
 		}

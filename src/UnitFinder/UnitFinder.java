@@ -25,10 +25,10 @@ public class UnitFinder {
 				//instanceId = "26$87467";	//Former Null Unit
 				Node startingMethod = tree.get(instanceId);
 
-				HashSet <Node> unit = findUnit(startingMethod);
-				HashSet<Node> unitTrimmed = removeExternalParentsAndChildren(unit);
+				Unit unit = findUnit(startingMethod);
+				Unit unitTrimmed = removeExternalParentsAndChildren(unit);
 
-				for (Node node:unitTrimmed){
+				for (Node node:unitTrimmed.getNodes()){
 					System.out.println(node);
 				}
 
@@ -40,31 +40,34 @@ public class UnitFinder {
 		System.out.println("Unit Finder Done");
 	}
 	
-	protected static HashSet<Node> findUnit(Node startingMethod) {
+	protected static Unit findUnit(Node startingMethod) {
 		//Get a list for all local roots above the given method
-		if (startingMethod == null) return new HashSet<Node>();
+		if (startingMethod == null) return null;
 		HashSet<Node> localRoots = new HashSet<Node>();
 		HashSet<Node> visitedMethods = new HashSet<Node>();
 		findAllLocalParentsForMethod(startingMethod, startingMethod, localRoots, visitedMethods);
 
 		int maxUnitSize = 0;
-		HashSet<Node> bestUnit = null; 
+		HashSet<Node> bestUnitList = null;
+		Node bestRoot = null;
 		
 		for (Node localRoot : localRoots) {
 			//For each local parent, get all methods it calls.
-			HashSet<Node> unit = new HashSet<>();
-			findAllDescendantsOfMethod(localRoot, unit);
+			HashSet<Node> unitList = new HashSet<>();
+			findAllDescendantsOfMethod(localRoot, unitList);
 			//Determine if a local root 
-			trimListToAUnit(unit, localRoot);
+			trimListToAUnit(unitList, localRoot);
 			//Discard Units that don't include the given method
-			if (!unit.contains(startingMethod)) continue;
+			if (!unitList.contains(startingMethod)) continue;
 			//Find the biggest Unit
-			if (unit.size() > maxUnitSize) {
-				maxUnitSize = unit.size();
-				bestUnit = unit;
+			if (unitList.size() > maxUnitSize) {
+				maxUnitSize = unitList.size();
+				bestUnitList = unitList;
+				bestRoot = localRoot;
 			}
 		}
-		return bestUnit;
+		
+		return bestUnitList == null ? null : new Unit(bestUnitList, bestRoot);
 	}
 	
 	private static void findAllLocalParentsForMethod(Node startingMethod, Node currentMethod, HashSet<Node> localRoots, HashSet<Node> visitedMethods) {
@@ -144,7 +147,8 @@ public class UnitFinder {
 	 * @param origList
 	 * @return
 	 */
-	private static HashSet<Node> removeExternalParentsAndChildren(HashSet<Node> origList) {
+	private static Unit removeExternalParentsAndChildren(Unit origUnit) {
+		HashSet<Node> origList = origUnit.getNodes();
 		HashMap<String, Node> trimmedMap = new HashMap<String, Node>();
 		//First pass - duplicate and save nodes against their IDs
 		for (Node origNode : origList) {
@@ -167,6 +171,6 @@ public class UnitFinder {
 			}
 		}
 		HashSet<Node> newList = new HashSet<Node>(trimmedMap.values());
-		return newList;
+		return new Unit(newList, origUnit.getRoot());
 	}
 }
