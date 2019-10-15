@@ -1,5 +1,7 @@
 package UnitFinder;
 
+import Visualizer.GraphVisualizer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +33,9 @@ public class UnitFinder {
 				for (Node node:unitTrimmed.getNodes()){
 					System.out.println(node);
 				}
+
+				GraphVisualizer gv = new GraphVisualizer(instanceId, unitTrimmed);
+				gv.displayGraph();
 
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -38,8 +38,8 @@ public class DataParser {
 				Node parent = tree.get(id);
 				Node child = tree.get(childID);
 				if (child == null) continue;
-				parent.children.add(child);
-				child.parents.add(parent);
+				parent.getChildren().add(child);
+				child.getParents().add(parent);
 			}
 		}
 		return tree;
