@@ -4,6 +4,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.MultiGraph;
+
+import Visualizer.GraphVisualizer;
+
 public class ConsistencyTest {
 	/**
 	 * 1 For each method, get its unit.
@@ -20,6 +25,7 @@ public class ConsistencyTest {
 			HashSet<String> testedMethodIDs = new HashSet<String>();
 			System.out.println("Size = " + tree.size());
 			int count = 0;
+			Graph graph = new MultiGraph("master graph");
 			for (String methodID : methodIDs) {
 				if (count++%100==0) {
 					System.out.println(count-1);
@@ -34,7 +40,11 @@ public class ConsistencyTest {
 				for (Node node : unit.getNodes()) {
 					testedMethodIDs.add(node.id);
 				}
+				
+				Unit trimmed = UnitFinder.removeExternalParentsAndChildren(unit);
+				GraphVisualizer.addUnitToGraph(graph, trimmed);
 			}
+			graph.display();
 			System.out.println("Consistency Test Done");
 		} catch (Exception e) {
 			e.printStackTrace();

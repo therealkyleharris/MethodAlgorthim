@@ -157,7 +157,7 @@ public class UnitFinder {
 	 * @param origList
 	 * @return
 	 */
-	private static Unit removeExternalParentsAndChildren(Unit origUnit) {
+	public static Unit removeExternalParentsAndChildren(Unit origUnit) {
 		HashSet<Node> origList = origUnit.getNodes();
 		HashMap<String, Node> trimmedMap = new HashMap<String, Node>();
 		Node newRoot = null;
