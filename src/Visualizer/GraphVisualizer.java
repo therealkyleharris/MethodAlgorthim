@@ -19,16 +19,16 @@ public class GraphVisualizer {
     private void constructGraph(Unit data) {
     	//First Pass - add all nodes:
     	for (Node node : data.getNodes()) {
-    		this.graph.addNode(node.getId());
+    		graph.addNode(node.getId());
     		String label = node == data.getRoot() ? "ROOT : " + node.getId() : node.getId();
-    		this.graph.getNode(node.getId()).setAttribute("ui.label", label);
+    		graph.getNode(node.getId()).setAttribute("ui.label", label);
     	}
     	
     	//Second Pass - add all edges
     	for (Node node : data.getNodes()) {
     		for (Node parent : node.getParents()) {
     			String edgeName = (node.getId() + "--" + parent.getId());
-    			this.graph.addEdge(edgeName, parent.getId(),node.getId(), true);
+    			graph.addEdge(edgeName, parent.getId(),node.getId(), true);
                 Edge e = graph.getEdge(edgeName);
                 e.setAttribute("directed", true);
     		}
@@ -37,6 +37,6 @@ public class GraphVisualizer {
 
 
     public void displayGraph(){
-        this.graph.display();
+        graph.display();
     }
 }
