@@ -21,7 +21,7 @@ public class UnitFinder {
 				//instanceId = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
 				//instanceId = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
 				//instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
-				//instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
+				instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
 				//instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
 				//instanceId = "18$77262";	//Former Null Unit
 				//instanceId = "26$87467";	//Former Null Unit
@@ -155,10 +155,12 @@ public class UnitFinder {
 	private static Unit removeExternalParentsAndChildren(Unit origUnit) {
 		HashSet<Node> origList = origUnit.getNodes();
 		HashMap<String, Node> trimmedMap = new HashMap<String, Node>();
+		Node newRoot = null;
 		//First pass - duplicate and save nodes against their IDs
 		for (Node origNode : origList) {
 			Node newNode = new Node(origNode.name, origNode.id);
 			trimmedMap.put(newNode.id, newNode);
+			if (origNode == origUnit.getRoot()) newRoot = newNode;
 		}
 		
 		//Second pass - duplicate Parent and Children lists, but only allow Nodes from the original list
@@ -176,6 +178,6 @@ public class UnitFinder {
 			}
 		}
 		HashSet<Node> newList = new HashSet<Node>(trimmedMap.values());
-		return new Unit(newList, origUnit.getRoot());
+		return new Unit(newList, newRoot);
 	}
 }
