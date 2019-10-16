@@ -7,21 +7,25 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.MultiGraph;
+
 public class UnitFinder {
 	public static void main(String[] args) {
-		String instanceId = "";
 		Scanner sc = new Scanner(System.in);
-
-		while(!instanceId.equalsIgnoreCase("quit")) {
-			System.out.print("Enter Method ID (or quit): ");
-			instanceId = sc.nextLine();
+		Graph graph = new MultiGraph("unit graph");
+		
+		while (true) {
+			System.out.print("Enter Method ID (or 'done' to display the graph): ");	
+			String instanceId = sc.nextLine();
+			if (instanceId.equalsIgnoreCase("done")) break;
 
 			try {
 				HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
 				//instanceId = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
 				//instanceId = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
 				//instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
-				instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
+				//instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
 				//instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
 				//instanceId = "18$77262";	//Former Null Unit
 				//instanceId = "26$87467";	//Former Null Unit
@@ -34,14 +38,15 @@ public class UnitFinder {
 					System.out.println(node);
 				}
 
-				GraphVisualizer gv = new GraphVisualizer(instanceId, unitTrimmed);
-				gv.displayGraph();
+				GraphVisualizer.addUnitToGraph(graph, unitTrimmed);
+				
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		sc.close();
+		graph.display();
 		System.out.println("Unit Finder Done");
 	}
 	
