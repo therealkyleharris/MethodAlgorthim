@@ -25,7 +25,7 @@ public class UnitFinder {
 				//instanceId = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
 				//instanceId = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
 				//instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
-				//instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
+				instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
 				//instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
 				//instanceId = "18$77262";	//Former Null Unit
 				//instanceId = "26$87467";	//Former Null Unit
