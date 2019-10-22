@@ -45,7 +45,7 @@ public class GraphVisualizer {
 
 
     // Uniquley colors each unit in the graph
-     static String genColor(){
+     public static String genColor(){
 
     	int color_1 = r.nextInt(255);
 		int color_2 = r.nextInt(255);
