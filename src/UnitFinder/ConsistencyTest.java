@@ -1,5 +1,6 @@
 package UnitFinder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +19,14 @@ public class ConsistencyTest {
 	 * In step 1, skip all methods that have already been tested in step 2 
 	 * @param args
 	 */
-	public static void main(String[] args) {
+
+	static ArrayList<Integer> unit_count;
+
+	public static void runConsistencyTest(){
+
+		int max_nodes = 0;
+		unit_count = new ArrayList<Integer>();
+
 		try {
 			HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
 			Set<String> methodIDs = tree.keySet();
@@ -36,6 +44,13 @@ public class ConsistencyTest {
 				}
 				Node method = tree.get(methodID);
 				Unit unit = UnitFinder.findUnit(method);
+
+				if(unit.getNodes().size() > max_nodes){
+					max_nodes = unit.getNodes().size();
+				}
+				// put the unit size in the array list
+				unit_count.add(unit.getNodes().size());
+
 				verifyUnitConsistency(methodID, unit);
 				for (Node node : unit.getNodes()) {
 					testedMethodIDs.add(node.id);
@@ -46,6 +61,9 @@ public class ConsistencyTest {
 			}
 			graph.display();
 			System.out.println("Consistency Test Done");
+			System.out.println("Max nodes : " + max_nodes);
+
+			System.out.println("Standard deviation : " + calculate_standard_deviation());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -63,4 +81,25 @@ public class ConsistencyTest {
 			}
 		}
 	}
+
+	static double calculate_standard_deviation(){
+
+		int sum = 0;
+		for(int x : unit_count ){
+			sum+=x;
+		}
+		int mean = (sum/ unit_count.size());
+
+		int sum_2 = 0;
+
+		for (int x: unit_count){
+			sum_2+=Math.pow(x-mean,2);
+		}
+
+		return Math.sqrt(sum_2 /unit_count.size());
+
+
+	}
+
+
 }

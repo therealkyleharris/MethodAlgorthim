@@ -2,22 +2,26 @@ package UnitFinder;
 
 import Visualizer.GraphVisualizer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
 
 public class UnitFinder {
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		Graph graph = new MultiGraph("unit graph");
 		
 		while (true) {
+
 			System.out.print("Enter Method ID (or 'done' to display the graph): ");	
 			String instanceId = sc.nextLine();
+
+			if(instanceId.equalsIgnoreCase("module")){
+				ConsistencyTest.runConsistencyTest();
+			}
+
 			if (instanceId.equalsIgnoreCase("done")) break;
 
 			try {
@@ -185,4 +189,5 @@ public class UnitFinder {
 		HashSet<Node> newList = new HashSet<Node>(trimmedMap.values());
 		return new Unit(newList, newRoot);
 	}
+
 }
