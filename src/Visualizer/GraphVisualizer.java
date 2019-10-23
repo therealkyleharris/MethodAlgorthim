@@ -23,9 +23,13 @@ public class GraphVisualizer {
     	//First Pass - add all nodes:
     	//graph.addAttribute("ui.stylesheet", "node { fill-color: red; }");
     	for (Node node : nodes) {
-    		graph.addNode(node.getId());
-    		//String label = node == root ? "ROOT : " + node.getId() : node.getId();
-    		//graph.getNode(node.getId()).setAttribute("ui.label", label);
+
+    		// only add the node if it doesn't exist
+    		if(graph.getNode(node.getId())==null) {
+				graph.addNode(node.getId());
+			}
+    		String label = node == root ? "ROOT : " + node.getId() : node.getId();
+    		graph.getNode(node.getId()).setAttribute("ui.label", label);
 			graph.getNode(node.getId()).setAttribute("ui.style", color);
 
 			// make the nodes a pretty color
@@ -41,6 +45,16 @@ public class GraphVisualizer {
     		}
     	}
     }
+
+    public static void expandGraphNode(Graph graph, Node root, Unit unit){
+    	// add an edge here
+		// maybe
+		// ^ remove above comment
+    	addUnitToGraph(graph, unit);
+		//graph.addEdge("",root.getId(), unit.getRoot().getId());
+	}
+
+
 
 
 

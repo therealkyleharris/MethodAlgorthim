@@ -1,0 +1,111 @@
+package UnitFinder;
+import Visualizer.GraphVisualizer;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.view.Viewer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+
+import static UnitFinder.UnitFinder.findUnit;
+import static UnitFinder.UnitFinder.removeExternalParentsAndChildren;
+
+public class UnitFinderUI {
+
+    //instanceId = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
+    //instanceId = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
+    //instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
+    //instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
+    //instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
+    //instanceId = "18$77262";	//Former Null Unit
+    //instanceId = "26$87467";	//Former Null Unit
+
+
+    static Scanner sc = new Scanner(System.in);
+    static HashMap<String, Node> tree;
+
+
+    public static void main(String[] args) {
+
+        displayUI();
+    }
+
+    public static void displayUI() {
+
+        Graph graph = new MultiGraph("unit graph");
+        Viewer v = graph.display();
+        while (true) {
+
+            System.out.println("[1] Graph Unit");
+            System.out.println("[2] Expand Node");
+            System.out.println("[3] Graph Module");
+            System.out.println("[4] Quit");
+
+            String input = sc.nextLine();
+
+            if (input.equalsIgnoreCase("1")) {
+                System.out.print("\t Enter an Instance ID : ");
+                String instanceId = sc.nextLine();
+                graphUnit(graph, instanceId);
+                // display the graph
+            } else if (input.equalsIgnoreCase("2")){
+                System.out.print("Enter a node to expand : " );
+                String expandNode=sc.nextLine();
+                expandNode(graph,expandNode);
+            }else if (input.equalsIgnoreCase("3")){
+                graphModule();
+            }else if(input.equalsIgnoreCase("4")){
+                break;
+            }
+
+        }
+
+    }
+
+
+    static void graphModule(){
+        ConsistencyTest.runConsistencyTest();
+    }
+
+    static void expandNode(Graph graph, String instanceId){
+        System.out.println("Expand Node code");
+        // get the children of the current node
+        ArrayList <Node> children = tree.get(instanceId).children;
+        // for all the children, graph the units
+        for(Node node: children){
+            graphUnit(graph, node.getId());
+        }
+    }
+
+    static void graphUnit(Graph graph, String instanceId){
+
+        try {
+            tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
+            // check if the instance id is valid
+            if (tree.containsKey(instanceId)) {
+
+                System.out.println("Running on  :" + instanceId);
+
+                Node startingMethod = tree.get(instanceId);
+
+                Unit unit = findUnit(startingMethod);
+                Unit unitTrimmed = removeExternalParentsAndChildren(unit);
+
+                for (Node node : unitTrimmed.getNodes()) {
+                    System.out.println(node);
+                }
+
+                GraphVisualizer.addUnitToGraph(graph, unitTrimmed);
+
+            }else{
+                System.out.println("Invalid Instance ID ");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+}

@@ -1,59 +1,8 @@
 package UnitFinder;
-
-import Visualizer.GraphVisualizer;
-
 import java.util.*;
-
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.MultiGraph;
 
 public class UnitFinder {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		Graph graph = new MultiGraph("unit graph");
-		
-		while (true) {
-
-			System.out.print("Enter Method ID (or 'done' to display the graph): ");	
-			String instanceId = sc.nextLine();
-
-			if(instanceId.equalsIgnoreCase("module")){
-				ConsistencyTest.runConsistencyTest();
-			}
-
-			if (instanceId.equalsIgnoreCase("done")) break;
-
-			try {
-				HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
-				//instanceId = "19$144724";	//get Down Traversal 7(SS)*S, 19$144724
-				//instanceId = "19$144756";	//Method Traversal@get Infinite Looping(SS)*S, 19$144756
-				//instanceId = "19$144751";	//get Down Traversal -2(SS), 19$144751
-				instanceId = "19$144732";	//get Down Traversal 3(SS)*S, 19$144732
-				//instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
-				//instanceId = "18$77262";	//Former Null Unit
-				//instanceId = "26$87467";	//Former Null Unit
-				Node startingMethod = tree.get(instanceId);
-
-				Unit unit = findUnit(startingMethod);
-				Unit unitTrimmed = removeExternalParentsAndChildren(unit);
-
-				for (Node node:unitTrimmed.getNodes()){
-					System.out.println(node);
-				}
-
-				GraphVisualizer.addUnitToGraph(graph, unitTrimmed);
-				
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		sc.close();
-		graph.display();
-		System.out.println("Unit Finder Done");
-	}
-	
 	protected static Unit findUnit(Node startingMethod) {
 		//Get a list for all local roots above the given method
 		if (startingMethod == null) return null;
@@ -96,6 +45,8 @@ public class UnitFinder {
 			findAllLocalParentsForMethod(startingMethod, parent, localRoots, visitedMethods);
 		}
 	}
+
+
 	
 	/**
 	 * Find all descendants of a method INCLUDING ITSELF
@@ -158,7 +109,7 @@ public class UnitFinder {
 	/**
 	 * Starting with a list of Nodes, return a list of new Nodes that only have parents and children on the original list.
 	 * The original Nodes are not modified, so that they can be reused later
-	 * @param origList
+	 * @param origUnit
 	 * @return
 	 */
 	public static Unit removeExternalParentsAndChildren(Unit origUnit) {
@@ -189,5 +140,7 @@ public class UnitFinder {
 		HashSet<Node> newList = new HashSet<Node>(trimmedMap.values());
 		return new Unit(newList, newRoot);
 	}
+
+
 
 }
