@@ -3,13 +3,15 @@ import Visualizer.GraphVisualizer;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.Viewer;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+
 import static UnitFinder.UnitFinder.findUnit;
 import static UnitFinder.UnitFinder.removeExternalParentsAndChildren;
+
+
 
 public class UnitFinderUI {
 
@@ -24,6 +26,9 @@ public class UnitFinderUI {
 
     static Scanner sc = new Scanner(System.in);
     static HashMap<String, Node> tree;
+    static boolean graphDisplayed = false;
+
+    static Viewer viewer;
 
 
     public static void main(String[] args) {
@@ -34,15 +39,20 @@ public class UnitFinderUI {
     public static void displayUI() {
 
         Graph graph = new MultiGraph("unit graph");
-        Viewer v = graph.display();
-        while (true) {
-
+        boolean interacting = true;
+        while (interacting) {
             System.out.println("[1] Graph Unit");
             System.out.println("[2] Expand Node");
             System.out.println("[3] Graph Module");
             System.out.println("[4] Quit");
 
             String input = sc.nextLine();
+
+            // just want to display the graph once after initial input
+            if(!graphDisplayed){
+                viewer = graph.display();
+                graphDisplayed=true;
+            }
 
             if (input.equalsIgnoreCase("1")) {
                 System.out.print("\t Enter an Instance ID : ");
@@ -54,9 +64,13 @@ public class UnitFinderUI {
                 String expandNode=sc.nextLine();
                 expandNode(graph,expandNode);
             }else if (input.equalsIgnoreCase("3")){
-                graphModule();
+                graphModule(graph);
             }else if(input.equalsIgnoreCase("4")){
-                break;
+                viewer.close();
+                sc.close();
+                // break out of all execution, including main thread and AWT.
+                // can cause problems if this is not the only thing executing on the JVM.
+                System.exit(0);
             }
 
         }
@@ -64,18 +78,34 @@ public class UnitFinderUI {
     }
 
 
-    static void graphModule(){
-        ConsistencyTest.runConsistencyTest();
+    static void graphModule(Graph graph){
+        ConsistencyTest.runConsistencyTest(graph);
     }
+
+
+    /* This will not fail, but it won't be quite right when there are multiple children in the same unit
+     * Need some slight refactoring*/
 
     static void expandNode(Graph graph, String instanceId){
         System.out.println("Expand Node code");
         // get the children of the current node
         ArrayList <Node> children = tree.get(instanceId).children;
         // for all the children, graph the units
-        for(Node node: children){
+
+        for(Node node: children) {
             graphUnit(graph, node.getId());
+
+            String edgeName = instanceId+"->"+node.getId();
+            // now add an edge between the source and the child node
+
+            // in some cases an edge will already exist in the current unit
+            // adding an edge in that case will fail..
+            if(!graph.getEdgeSet().contains(edgeName)) {
+                graph.addEdge(edgeName, instanceId, node.getId(), true);
+            }
+
         }
+
     }
 
     static void graphUnit(Graph graph, String instanceId){

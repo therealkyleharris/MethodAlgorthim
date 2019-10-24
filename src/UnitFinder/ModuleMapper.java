@@ -12,6 +12,8 @@ import org.graphstream.graph.implementations.MultiGraph;
 import Visualizer.GraphVisualizer;
 
 public class ModuleMapper {
+
+
 	public static void main(String[] args) {
 		try {
 			Graph graph = new MultiGraph("unit graph");

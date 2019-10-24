@@ -39,7 +39,11 @@ public class GraphVisualizer {
     	for (Node node : nodes) {
     		for (Node parent : node.getParents()) {
     			String edgeName = (node.getId() + "--" + parent.getId());
-    			graph.addEdge(edgeName, parent.getId(),node.getId(), true);
+    			try {
+					graph.addEdge(edgeName, parent.getId(), node.getId(), true);
+				}catch(Exception e){
+    				// duplicate edge here, no need to handle this other than catching the exception.
+				}
                 Edge e = graph.getEdge(edgeName);
                 e.setAttribute("directed", true);
     		}

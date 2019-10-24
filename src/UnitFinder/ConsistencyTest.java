@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.MultiGraph;
 
 import Visualizer.GraphVisualizer;
 
@@ -22,7 +21,7 @@ public class ConsistencyTest {
 
 	static ArrayList<Integer> unit_count;
 
-	public static void runConsistencyTest(){
+	public static void runConsistencyTest(Graph graph){
 
 		int max_nodes = 0;
 		unit_count = new ArrayList<Integer>();
@@ -33,7 +32,7 @@ public class ConsistencyTest {
 			HashSet<String> testedMethodIDs = new HashSet<String>();
 			System.out.println("Size = " + tree.size());
 			int count = 0;
-			Graph graph = new MultiGraph("master graph");
+			//Graph graph = new MultiGraph("master graph");
 			for (String methodID : methodIDs) {
 				if (count++%100==0) {
 					System.out.println(count-1);
@@ -59,7 +58,7 @@ public class ConsistencyTest {
 				Unit trimmed = UnitFinder.removeExternalParentsAndChildren(unit);
 				GraphVisualizer.addUnitToGraph(graph, trimmed);
 			}
-			graph.display();
+			//graph.display();
 			System.out.println("Consistency Test Done");
 			System.out.println("Max nodes : " + max_nodes);
 
