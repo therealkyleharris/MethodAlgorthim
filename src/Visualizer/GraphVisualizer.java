@@ -36,6 +36,8 @@ public class GraphVisualizer {
     	}
     	
     	//Second Pass - add all edges
+    	String red = "fill-color: rgb(255, 0, 0);";
+    	String black = "fill-color: rgb(0, 0, 0);";
     	for (Node node : nodes) {
     		for (Node parent : node.getParents()) {
     			String edgeName = (node.getId() + "--" + parent.getId());
@@ -46,6 +48,8 @@ public class GraphVisualizer {
 				}
                 Edge e = graph.getEdge(edgeName);
                 e.setAttribute("directed", true);
+                String edgeColor = node.module.equals(parent.module) ? black : red;
+                e.setAttribute("ui.style", edgeColor);
     		}
     	}
     }
