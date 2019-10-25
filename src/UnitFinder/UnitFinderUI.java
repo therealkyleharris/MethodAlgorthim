@@ -3,15 +3,13 @@ import Visualizer.GraphVisualizer;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.Viewer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-
 import static UnitFinder.UnitFinder.findUnit;
 import static UnitFinder.UnitFinder.removeExternalParentsAndChildren;
-
-
 
 public class UnitFinderUI {
 
@@ -64,7 +62,7 @@ public class UnitFinderUI {
                 String expandNode=sc.nextLine();
                 expandNode(graph,expandNode);
             }else if (input.equalsIgnoreCase("3")){
-                graphModule(graph);
+            	ModuleMapper.mapModule(graph);
             }else if(input.equalsIgnoreCase("4")){
                 viewer.close();
                 sc.close();
@@ -77,15 +75,8 @@ public class UnitFinderUI {
 
     }
 
-
-    static void graphModule(Graph graph){
-        ConsistencyTest.runConsistencyTest(graph);
-    }
-
-
     /* This will not fail, but it won't be quite right when there are multiple children in the same unit
      * Need some slight refactoring*/
-
     static void expandNode(Graph graph, String instanceId){
         System.out.println("Expand Node code");
         // get the children of the current node
@@ -100,12 +91,10 @@ public class UnitFinderUI {
 
             // in some cases an edge will already exist in the current unit
             // adding an edge in that case will fail..
-            if(!graph.getEdgeSet().contains(edgeName)) {
+            if(graph.getEdge(edgeName) == null) {
                 graph.addEdge(edgeName, instanceId, node.getId(), true);
             }
-
         }
-
     }
 
     static void graphUnit(Graph graph, String instanceId){

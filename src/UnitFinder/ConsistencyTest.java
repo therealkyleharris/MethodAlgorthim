@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.graphstream.graph.Graph;
-
-import Visualizer.GraphVisualizer;
-
 public class ConsistencyTest {
+
+	static ArrayList<Integer> unit_count;
+	
+	public static void main(String[] args) {
+		runConsistencyTest();
+	}
+
 	/**
 	 * 1 For each method, get its unit.
 	 * 2 For each method in the unit, get it's unit
@@ -18,19 +21,16 @@ public class ConsistencyTest {
 	 * In step 1, skip all methods that have already been tested in step 2 
 	 * @param args
 	 */
-
-	static ArrayList<Integer> unit_count;
-
-	public static void runConsistencyTest(Graph graph){
-
+	public static void runConsistencyTest(){
 		int max_nodes = 0;
 		unit_count = new ArrayList<Integer>();
 
 		try {
-			HashMap<String, Node> tree = DataParser.readFile("TimeCoreAndTools.csv");
+			//HashMap<String, Node> tree = DataParser.readFile("TimeCoreAndTools.csv");
+			HashMap<String, Node> tree = DataParser.readFile("all_methods.csv");
 			Set<String> methodIDs = tree.keySet();
 			HashSet<String> testedMethodIDs = new HashSet<String>();
-			System.out.println("Size = " + tree.size());
+			System.out.println("Consistency Check: " + tree.size());
 			int count = 0;
 			//Graph graph = new MultiGraph("master graph");
 			for (String methodID : methodIDs) {
@@ -53,15 +53,11 @@ public class ConsistencyTest {
 				verifyUnitConsistency(methodID, unit);
 				for (Node node : unit.getNodes()) {
 					testedMethodIDs.add(node.id);
-				}
-				
-				Unit trimmed = UnitFinder.removeExternalParentsAndChildren(unit);
-				GraphVisualizer.addUnitToGraph(graph, trimmed);
+				}				
 			}
 			//graph.display();
 			System.out.println("Consistency Test Done");
 			System.out.println("Max nodes : " + max_nodes);
-
 			System.out.println("Standard deviation : " + calculate_standard_deviation());
 		} catch (Exception e) {
 			e.printStackTrace();
