@@ -17,7 +17,7 @@ public class ModuleMapper {
 	public static void main(String[] args) {
 		try {
 			Graph graph = new MultiGraph("unit graph");
-			HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
+			HashMap<String, Node> tree = DataParser.readFile("TimeCoreAndTools.csv");
 			GraphVisualizer.addDataToGraph(graph, tree.values(), null);
 			ArrayList<Set<Node>> nodesByUnit = mapNodesToUnits(tree);
 			for (Set<Node> unitNodes : nodesByUnit) {
@@ -39,8 +39,11 @@ public class ModuleMapper {
 		HashSet<Node> visitedNodes = new HashSet<Node>();
 		int count = 0;
 		for (Node node : nodes) {
-			if (count++%100==0) {
+			if (count++%1==0) {
 				System.out.println(count-1);
+			}
+			if (count == 46) {
+				int i = 0;
 			}
 			if (visitedNodes.contains(node)) continue;
 			Unit unit = UnitFinder.findUnit(node);

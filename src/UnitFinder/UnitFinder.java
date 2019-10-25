@@ -39,14 +39,12 @@ public class UnitFinder {
 			return;
 		}
 		visitedMethods.add(currentMethod);
-		ArrayList<Node> parents = currentMethod.parents;
+		Collection<Node> parents = currentMethod.getParentsInTheSameModule();
 		if (parents.size() != 1) localRoots.add(currentMethod);
 		for (Node parent : parents) {
 			findAllLocalParentsForMethod(startingMethod, parent, localRoots, visitedMethods);
 		}
 	}
-
-
 	
 	/**
 	 * Find all descendants of a method INCLUDING ITSELF
@@ -69,7 +67,8 @@ public class UnitFinder {
 	private static void findAllDescendantsOfMethod(Node currentMethod, HashSet<Node> descendants){
 		if (descendants.contains(currentMethod)) return;
 		descendants.add(currentMethod);
-		for (Node child : currentMethod.children) {
+		Collection<Node> children = currentMethod.getChildrenInTheSameModule();
+		for (Node child : children) {
 			findAllDescendantsOfMethod(child, descendants);
 		}
 	}
@@ -87,7 +86,7 @@ public class UnitFinder {
 		for (Node node : list) {
 			if (node == root) continue;
 			//For each parent of each node
-			ArrayList<Node> parents = node.parents;
+			Collection<Node> parents = node.getParentsInTheSameModule();
 			for (Node parent : parents) {
 				//If the parent is outside the list, this node will need to be removed
 				if (!list.contains(parent)) nodesWithOutsideCallers.add(node);
@@ -118,7 +117,7 @@ public class UnitFinder {
 		Node newRoot = null;
 		//First pass - duplicate and save nodes against their IDs
 		for (Node origNode : origList) {
-			Node newNode = new Node(origNode.name, origNode.id);
+			Node newNode = new Node(origNode.name, origNode.id, origNode.module);
 			trimmedMap.put(newNode.id, newNode);
 			if (origNode == origUnit.getRoot()) newRoot = newNode;
 		}

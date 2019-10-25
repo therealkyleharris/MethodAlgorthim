@@ -12,7 +12,8 @@ import org.apache.commons.csv.CSVRecord;
 public class DataParser {
 
 	
-	public static HashMap<String, Node> readFile(String filename, int idColumn, int nameColumn, int childColumn) throws IOException{
+	public static HashMap<String, Node> readFile(String filename) throws IOException{
+		int moduleColumn = 0, idColumn = 3, nameColumn = 2, childColumn = 5;
 		HashMap<String, Node> tree = new HashMap<>();
 		
 		File csvData = new File(filename);
@@ -26,7 +27,8 @@ public class DataParser {
 			}
 			String id = row.get(idColumn);
 			String name = row.get(nameColumn);
-			Node node = new Node(name, id);
+			String module = row.get(moduleColumn);
+			Node node = new Node(name, id, module);
 			tree.put(id, node);
 		}
 		//Second Pass - link descendants to methods

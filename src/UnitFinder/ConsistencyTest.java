@@ -27,7 +27,7 @@ public class ConsistencyTest {
 		unit_count = new ArrayList<Integer>();
 
 		try {
-			HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
+			HashMap<String, Node> tree = DataParser.readFile("TimeCoreData.csv");
 			Set<String> methodIDs = tree.keySet();
 			HashSet<String> testedMethodIDs = new HashSet<String>();
 			System.out.println("Size = " + tree.size());

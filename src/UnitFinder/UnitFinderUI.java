@@ -111,7 +111,7 @@ public class UnitFinderUI {
     static void graphUnit(Graph graph, String instanceId){
 
         try {
-            tree = DataParser.readFile("TimeCoreData.csv", 2, 1, 5);
+            tree = DataParser.readFile("TimeCoreData.csv");
             // check if the instance id is valid
             if (tree.containsKey(instanceId)) {
 
