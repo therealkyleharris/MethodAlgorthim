@@ -8,10 +8,6 @@ import java.util.Set;
 public class ConsistencyTest {
 
 	static ArrayList<Integer> unit_count;
-	
-	public static void main(String[] args) {
-		runConsistencyTest();
-	}
 
 	/**
 	 * 1 For each method, get its unit.
@@ -21,13 +17,11 @@ public class ConsistencyTest {
 	 * In step 1, skip all methods that have already been tested in step 2 
 	 * @param args
 	 */
-	public static void runConsistencyTest(){
+	public static void runConsistencyTest(HashMap<String, Node> tree){
 		int max_nodes = 0;
 		unit_count = new ArrayList<Integer>();
 
 		try {
-			//HashMap<String, Node> tree = DataParser.readFile("TimeCoreAndTools.csv");
-			HashMap<String, Node> tree = DataParser.readFile("AllTime.csv");
 			Set<String> methodIDs = tree.keySet();
 			HashSet<String> testedMethodIDs = new HashSet<String>();
 			System.out.println("Consistency Check: " + tree.size());

@@ -9,6 +9,9 @@ import UnitFinder.Unit;
 public class GraphVisualizer {
 
 	static Random r = new Random();
+	public static String RED = "fill-color: rgb(255, 0, 0);";
+	public static String BLACK = "fill-color: rgb(0, 0, 0);";
+
 	
     public static void addUnitToGraph(Graph graph, Unit unit) {
     	addDataToGraph(graph, unit.getNodes(), unit.getRoot());
@@ -36,21 +39,21 @@ public class GraphVisualizer {
     	}
     	
     	//Second Pass - add all edges
-    	String red = "fill-color: rgb(255, 0, 0);";
-    	String black = "fill-color: rgb(0, 0, 0);";
     	for (Node node : nodes) {
     		for (Node parent : node.getParents()) {
-    			String edgeName = (node.getId() + "--" + parent.getId());
-    			try {
-					graph.addEdge(edgeName, parent.getId(), node.getId(), true);
-				}catch(Exception e){
-    				// duplicate edge here, no need to handle this other than catching the exception.
-				}
-                Edge e = graph.getEdge(edgeName);
-                e.setAttribute("directed", true);
-                String edgeColor = node.module.equals(parent.module) ? black : red;
-                e.setAttribute("ui.style", edgeColor);
+    			addEdge(graph, parent, node);
     		}
+    	}
+    }
+    
+    public static void addEdge(Graph graph, Node parent, Node child) {
+    	String edgeName = (parent.getId() + "--" + child.getId());
+    	if (graph.getEdge(edgeName) == null) {
+    		graph.addEdge(edgeName, parent.getId(), child.getId(), true);
+            Edge e = graph.getEdge(edgeName);
+            e.setAttribute("directed", true);
+            String edgeColor = parent.module.equals(child.module) ? BLACK : RED;
+            e.setAttribute("ui.style", edgeColor);
     	}
     }
 
