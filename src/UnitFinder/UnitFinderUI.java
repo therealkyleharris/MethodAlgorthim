@@ -2,6 +2,7 @@ package UnitFinder;
 import Visualizer.GraphVisualizer;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.graph.implementations.MultiNode;
 import org.graphstream.ui.view.Viewer;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class UnitFinderUI {
 
 
     static Scanner sc = new Scanner(System.in);
-    static HashMap<String, Node> tree;
+    private static HashMap<String, Node> tree;
     static boolean graphDisplayed = false;
 
     static Viewer viewer;
@@ -39,10 +40,13 @@ public class UnitFinderUI {
         Graph graph = new MultiGraph("unit graph");
         boolean interacting = true;
         while (interacting) {
+        	tree = DataParser.readFile("AllTime.csv");
+        	
             System.out.println("[1] Graph Unit");
             System.out.println("[2] Expand Node");
-            System.out.println("[3] Graph Module");
-            System.out.println("[4] Quit");
+            System.out.println("[3] Expand All On-Screen Nodes");
+            System.out.println("[4] Graph Module");
+            System.out.println("[5] Quit");
 
             String input = sc.nextLine();
 
@@ -61,9 +65,15 @@ public class UnitFinderUI {
                 System.out.print("Enter a node to expand : " );
                 String expandNode=sc.nextLine();
                 expandNode(graph,expandNode);
-            }else if (input.equalsIgnoreCase("3")){
+            } else if (input.equalsIgnoreCase("3")){
+            	@SuppressWarnings("unchecked")
+				Iterable<MultiNode> graphedNodes = (Iterable<MultiNode>) graph.getEachNode();
+            	for (MultiNode graphedNode : graphedNodes) {
+            		expandNode(graph, graphedNode.getId());
+            	}
+            } else if (input.equalsIgnoreCase("4")){
             	ModuleMapper.mapModule(graph);
-            }else if(input.equalsIgnoreCase("4")){
+            } else if(input.equalsIgnoreCase("5")){
                 viewer.close();
                 sc.close();
                 // break out of all execution, including main thread and AWT.
@@ -77,7 +87,7 @@ public class UnitFinderUI {
 
     /* This will not fail, but it won't be quite right when there are multiple children in the same unit
      * Need some slight refactoring*/
-    static void expandNode(Graph graph, String instanceId){
+    private static void expandNode(Graph graph, String instanceId){
         System.out.println("Expand Node code");
         // get the children of the current node
         ArrayList <Node> children = tree.get(instanceId).children;
@@ -97,10 +107,9 @@ public class UnitFinderUI {
         }
     }
 
-    static void graphUnit(Graph graph, String instanceId){
+    private static void graphUnit(Graph graph, String instanceId){
 
         try {
-            tree = DataParser.readFile("AllTime.csv");
             // check if the instance id is valid
             if (tree.containsKey(instanceId)) {
 
