@@ -57,48 +57,11 @@ public class GraphVisualizer {
     	}
     }
 
-    public static void expandGraphNode(Graph graph, Node root, Unit unit){
-    	// add an edge here
-		// maybe
-		// ^ remove above comment
-    	addUnitToGraph(graph, unit);
-		//graph.addEdge("",root.getId(), unit.getRoot().getId());
-	}
-
-
-
-
-
     // Uniquley colors each unit in the graph
-     public static String genColor(){
-
+    public static String genColor(){
     	int color_1 = r.nextInt(255);
 		int color_2 = r.nextInt(255);
 		int color_3 = r.nextInt(255);
-
 		return String.format("fill-color: rgb(%d, %d, %d);", color_1, color_2, color_3);
 	}
-
-    //
-	/*static String genColor(double redness){
-
-		double rounded_red = Math.floor(redness);
-		int color_1 = (int)rounded_red;
-		int color_2 = 255-color_1;
-		int color_3 = 0;
-
-		if(color_1!=0){
-			System.out.println(color_1+ " "+color_2+" "+color_3);
-		}
-
-
-		return String.format("fill-color: rgb(%d, %d, %d);", color_1, color_2, color_3);
-
-	}*/
-
-
-
-
-
-
 }
