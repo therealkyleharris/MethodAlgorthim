@@ -27,7 +27,7 @@ public class ConsistencyTest {
 
 		try {
 			//HashMap<String, Node> tree = DataParser.readFile("TimeCoreAndTools.csv");
-			HashMap<String, Node> tree = DataParser.readFile("all_methods.csv");
+			HashMap<String, Node> tree = DataParser.readFile("AllTime.csv");
 			Set<String> methodIDs = tree.keySet();
 			HashSet<String> testedMethodIDs = new HashSet<String>();
 			System.out.println("Consistency Check: " + tree.size());

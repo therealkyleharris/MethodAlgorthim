@@ -26,19 +26,21 @@ public class ModuleMapper {
 	}
 	
 	public static void mapModule(Graph graph) {
-		HashMap<String, Node> tree = DataParser.readFile("TimeCoreAndTools.csv");
+		HashMap<String, Node> tree = DataParser.readFile("AllTime.csv");
 		GraphVisualizer.addDataToGraph(graph, tree.values(), null);
-		ArrayList<Set<Node>> nodesByUnit = mapNodesToUnits(tree);
-		for (Set<Node> unitNodes : nodesByUnit) {
+		ArrayList<Unit> nodesByUnit = mapNodesToUnits(tree);
+		for (Unit unit : nodesByUnit) {
 			String color = GraphVisualizer.genColor();
-			for (Node node : unitNodes) {
+			for (Node node : unit.getNodes()) {
 				graph.getNode(node.getId()).setAttribute("ui.style", color);
 			}
+			Node root = unit.getRoot();
+			graph.getNode(root.getId()).setAttribute("ui.label", "ROOT : " + root.getId());
 		}
 	}
 	
-	private static ArrayList<Set<Node>> mapNodesToUnits(HashMap<String, Node> tree) {
-		ArrayList<Set<Node>> units = new ArrayList<Set<Node>>();
+	private static ArrayList<Unit> mapNodesToUnits(HashMap<String, Node> tree) {
+		ArrayList<Unit> units = new ArrayList<Unit>();
 		Collection<Node> nodes = tree.values();
 		HashSet<Node> visitedNodes = new HashSet<Node>();
 		int count = 0;
@@ -49,9 +51,8 @@ public class ModuleMapper {
 			}
 			if (visitedNodes.contains(node)) continue;
 			Unit unit = UnitFinder.findUnit(node);
-			HashSet<Node> unitNodes = unit.getNodes();
-			visitedNodes.addAll(unitNodes);
-			units.add(unitNodes);
+			visitedNodes.addAll(unit.getNodes());
+			units.add(unit);
 		}
 		return units;
 	}
