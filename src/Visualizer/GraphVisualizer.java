@@ -45,7 +45,8 @@ public class GraphVisualizer {
 			// make the nodes a pretty color
     	}
     	
-    	//Second Pass - add all edges
+    	//Second Pass - add all edges. This links nodes in a unit AND links unit to other units already on the screen.
+    	//Process, both, parent and children links to ensure connections to other units.
     	for (Node node : nodes) {
     		for (Node parent : node.getParents()) {
     			addEdge(graph, parent, node);

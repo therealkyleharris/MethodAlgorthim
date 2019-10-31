@@ -51,5 +51,4 @@ public class Node {
 		Predicate<Node> nodeFilter = item -> item.module.equals(module);
 		return nodes.stream().filter(nodeFilter).collect(Collectors.toList());
 	}
-
 }

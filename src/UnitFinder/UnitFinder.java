@@ -18,7 +18,7 @@ public class UnitFinder {
 			//For each local parent, get all methods it calls.
 			HashSet<Node> unitList = new HashSet<>();
 			findAllDescendantsOfMethod(localRoot, unitList);
-			//Determine if a local root 
+			//Find a unit for a potential root 
 			trimListToAUnit(unitList, localRoot);
 			//Discard Units that don't include the given method
 			if (!unitList.contains(startingMethod)) continue;
@@ -39,8 +39,12 @@ public class UnitFinder {
 			return;
 		}
 		visitedMethods.add(currentMethod);
-		Collection<Node> parents = currentMethod.getParentsInTheSameModule();
-		if (parents.size() != 1) localRoots.add(currentMethod);
+		// A node is NOT a local root only when it has a single parent, and that parent is in the same module
+		if (!(currentMethod.getParents().size() == 1 && currentMethod.getParentsInTheSameModule().size() == 1)) {
+			localRoots.add(currentMethod);
+		}
+		// Since a unit can't cross a module, do not investigate other modules
+		Collection<Node> parents = currentMethod.getParentsInTheSameModule(); 
 		for (Node parent : parents) {
 			findAllLocalParentsForMethod(startingMethod, parent, localRoots, visitedMethods);
 		}
@@ -48,7 +52,7 @@ public class UnitFinder {
 	
 	/**
 	 * Find all descendants of a method INCLUDING ITSELF
-	 * While traversing descendants, do not enter a specific note
+	 * While traversing descendants, do not enter a specific node
 	 * @param currentMethod
 	 * @param descendants
 	 * @param block
@@ -60,7 +64,7 @@ public class UnitFinder {
 	}
 	
 	/**
-	 * Return all descendants of a method INCLUDING ITSELF
+	 * Return all descendants of a method INCLUDING ITSELF in the same module
 	 * @param currentMethod
 	 * @param descendants
 	 */
@@ -86,7 +90,7 @@ public class UnitFinder {
 		for (Node node : list) {
 			if (node == root) continue;
 			//For each parent of each node
-			Collection<Node> parents = node.getParentsInTheSameModule();
+			Collection<Node> parents = node.getParents();
 			for (Node parent : parents) {
 				//If the parent is outside the list, this node will need to be removed
 				if (!list.contains(parent)) nodesWithOutsideCallers.add(node);

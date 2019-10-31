@@ -36,6 +36,10 @@ public class ConsistencyTest {
 				}
 				Node method = tree.get(methodID);
 				Unit unit = UnitFinder.findUnit(method);
+				if (unit == null || unit.getNodes() == null) {
+					System.out.println("ERROR: FAILED TO FIND A UNIT FOR " + methodID);
+					return;
+				}
 
 				if(unit.getNodes().size() > max_nodes){
 					max_nodes = unit.getNodes().size();
