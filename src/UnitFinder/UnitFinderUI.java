@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 import static UnitFinder.UnitFinder.findUnit;
-import static UnitFinder.UnitFinder.removeExternalParentsAndChildren;
 
 public class UnitFinderUI {
 
@@ -23,6 +22,8 @@ public class UnitFinderUI {
     //instanceId = "19$144727";	//get Down Traversal 5(SS)*S, 19$144727
     //instanceId = "18$77262";	//Former Null Unit
     //instanceId = "26$87467";	//Former Null Unit
+	//Method Traversal@get Module Break Test 2(SS)*S, 19$145176
+	//Method Traversal@get Module Break Test EX-to-3(SS)*S, 19$145178
 
     private static HashMap<String, Node> tree = DataParser.readFile("AllTime.csv");
     private static Graph graph = new MultiGraph("unit graph");
@@ -54,7 +55,7 @@ public class UnitFinderUI {
             		expandNode(nodeID, graphedNodeIDs);
             	}
             } else if (input.equalsIgnoreCase("4")){
-            	ModuleMapper.mapModule(graph);
+            	ModuleMapper.mapModule(graph, tree);
             } else if (input.equalsIgnoreCase("5")){
             	ConsistencyTest.runConsistencyTest(tree);
             } else if(input.equalsIgnoreCase("6")){
@@ -102,24 +103,17 @@ public class UnitFinderUI {
         try {
             // check if the instance id is valid
             if (tree.containsKey(instanceId)) {
-
                 System.out.println("Running on  :" + instanceId);
-
                 Node startingMethod = tree.get(instanceId);
-
                 Unit unit = findUnit(startingMethod);
-                Unit unitTrimmed = removeExternalParentsAndChildren(unit);
-
-                for (Node node : unitTrimmed.getNodes()) {
+                //Unit unitTrimmed = removeExternalParentsAndChildren(unit);
+                for (Node node : unit.getNodes()) {
                     System.out.println(node);
                 }
-
-                GraphVisualizer.addUnitToGraph(graph, unitTrimmed);
-
+                GraphVisualizer.addUnitToGraph(graph, unit);
             }else{
                 System.out.println("Invalid Instance ID ");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -16,7 +16,8 @@ public class ModuleMapper {
 	public static void main(String[] args) {
 		try {
 			Graph graph = new MultiGraph("unit graph");
-			mapModule(graph);
+			HashMap<String, Node> tree = DataParser.readFile("AllTime.csv");
+			mapModule(graph, tree);
 			graph.display();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -24,8 +25,7 @@ public class ModuleMapper {
 		System.out.println("Module Mapper Done");
 	}
 	
-	public static void mapModule(Graph graph) {
-		HashMap<String, Node> tree = DataParser.readFile("AllTime.csv");
+	public static void mapModule(Graph graph, HashMap<String, Node> tree) {
 		GraphVisualizer.addDataToGraph(graph, tree.values(), null);
 		ArrayList<Unit> nodesByUnit = mapNodesToUnits(tree);
 		for (Unit unit : nodesByUnit) {

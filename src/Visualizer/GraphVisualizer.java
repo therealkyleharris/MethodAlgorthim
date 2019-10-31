@@ -43,10 +43,19 @@ public class GraphVisualizer {
     		for (Node parent : node.getParents()) {
     			addEdge(graph, parent, node);
     		}
+    		for (Node child : node.getChildren()) {
+    			addEdge(graph, node, child);
+    		}
     	}
     }
     
     public static void addEdge(Graph graph, Node parent, Node child) {
+    	if (graph.getNode(parent.id) == null || graph.getNode(child.id) == null) {
+    		//If an origin or destination of this edge is not on the graph,
+    		// as will happen when trying to connect the unit to outside nodes that haven't been added yet,
+    		// do nothing.
+    		return;
+    	}
     	String edgeName = (parent.getId() + "--" + child.getId());
     	if (graph.getEdge(edgeName) == null) {
     		graph.addEdge(edgeName, parent.getId(), child.getId(), true);

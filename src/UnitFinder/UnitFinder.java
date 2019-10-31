@@ -106,12 +106,12 @@ public class UnitFinder {
 	}
 	
 	/**
-	 * Starting with a list of Nodes, return a list of new Nodes that only have parents and children on the original list.
+	 * Starting with a list of Nodes, return a list of same Nodes, but remove all child and parents links to nodes not on the orig list.
 	 * The original Nodes are not modified, so that they can be reused later
 	 * @param origUnit
 	 * @return
 	 */
-	public static Unit removeExternalParentsAndChildren(Unit origUnit) {
+	public static Unit removeExternalParentsAndChildrenX(Unit origUnit) {
 		HashSet<Node> origList = origUnit.getNodes();
 		HashMap<String, Node> trimmedMap = new HashMap<String, Node>();
 		Node newRoot = null;
