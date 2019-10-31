@@ -104,42 +104,4 @@ public class UnitFinder {
 		
 		return;
 	}
-	
-	/**
-	 * Starting with a list of Nodes, return a list of same Nodes, but remove all child and parents links to nodes not on the orig list.
-	 * The original Nodes are not modified, so that they can be reused later
-	 * @param origUnit
-	 * @return
-	 */
-	public static Unit removeExternalParentsAndChildrenX(Unit origUnit) {
-		HashSet<Node> origList = origUnit.getNodes();
-		HashMap<String, Node> trimmedMap = new HashMap<String, Node>();
-		Node newRoot = null;
-		//First pass - duplicate and save nodes against their IDs
-		for (Node origNode : origList) {
-			Node newNode = new Node(origNode.name, origNode.id, origNode.module);
-			trimmedMap.put(newNode.id, newNode);
-			if (origNode == origUnit.getRoot()) newRoot = newNode;
-		}
-		
-		//Second pass - duplicate Parent and Children lists, but only allow Nodes from the original list
-		for (Node origNode : origList) {
-			Node newNode = trimmedMap.get(origNode.id);
-			for (Node parent : origNode.parents) {
-				if (origList.contains(parent)) {
-					newNode.parents.add(parent);
-				}
-			}
-			for (Node child : origNode.children) {
-				if (origList.contains(child)) {
-					newNode.children.add(child);
-				}
-			}
-		}
-		HashSet<Node> newList = new HashSet<Node>(trimmedMap.values());
-		return new Unit(newList, newRoot);
-	}
-
-
-
 }
