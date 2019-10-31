@@ -5,6 +5,7 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiNode;
 import org.graphstream.ui.view.Viewer;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -66,7 +67,7 @@ public class UnitFinderUI {
             		expandNodeParents(nodeID, graphedNodeIDs);
             	}
             } else if (input.equalsIgnoreCase("6")){
-            	ModuleMapper.mapModule(graph, tree);
+            	mapModule(graph, tree);
             } else if (input.equalsIgnoreCase("7")){
             	ConsistencyTest.runConsistencyTest(tree);
             } else if(input.equalsIgnoreCase("8")){
@@ -139,5 +140,20 @@ public class UnitFinderUI {
         }
 
     }
-
+    
+	private static void mapModule(Graph graph, HashMap<String, Node> tree) {
+		Collection<Node> nodes = tree.values();
+		HashSet<Node> visitedNodes = new HashSet<Node>();
+		int count = 0;
+		System.out.println("Mapping Nodes to Units: " + nodes.size());
+		for (Node node : nodes) {
+			if (count++%100==0) {
+				System.out.println(count-1);
+			}
+			if (visitedNodes.contains(node)) continue;
+			Unit unit = UnitFinder.findUnit(node);
+			visitedNodes.addAll(unit.getNodes());
+			GraphVisualizer.addDataToGraph(graph, unit.getNodes(), unit.getRoot());
+		}
+	}
 }
