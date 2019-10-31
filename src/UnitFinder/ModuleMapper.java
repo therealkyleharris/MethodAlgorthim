@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.MultiGraph;
 
 import Visualizer.GraphVisualizer;
 
@@ -15,7 +14,7 @@ public class ModuleMapper {
 
 	public static void main(String[] args) {
 		try {
-			Graph graph = new MultiGraph("unit graph");
+			Graph graph = GraphVisualizer.createGraph();
 			HashMap<String, Node> tree = DataParser.readFile("AllTime.csv");
 			mapModule(graph, tree);
 			graph.display();

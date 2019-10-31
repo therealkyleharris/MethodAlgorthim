@@ -26,7 +26,6 @@ public class ConsistencyTest {
 			HashSet<String> testedMethodIDs = new HashSet<String>();
 			System.out.println("Consistency Check: " + tree.size());
 			int count = 0;
-			//Graph graph = new MultiGraph("master graph");
 			for (String methodID : methodIDs) {
 				if (count++%100==0) {
 					System.out.println(count-1);

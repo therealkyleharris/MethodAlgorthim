@@ -2,6 +2,8 @@ package Visualizer;
 import java.util.Collection;
 import java.util.Random;
 import org.graphstream.graph.*;
+import org.graphstream.graph.implementations.MultiGraph;
+
 import UnitFinder.Node;
 import UnitFinder.Unit;
 
@@ -12,6 +14,11 @@ public class GraphVisualizer {
 	public static String RED = "fill-color: rgb(255, 0, 0);";
 	public static String BLACK = "fill-color: rgb(0, 0, 0);";
 
+	public static Graph createGraph() {
+		Graph graph = new MultiGraph("unit graph");
+		graph.setAttribute("layout.stabilization-limit", 0.9);
+		return graph;
+	}
 	
     public static void addUnitToGraph(Graph graph, Unit unit) {
     	addDataToGraph(graph, unit.getNodes(), unit.getRoot());

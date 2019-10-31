@@ -2,11 +2,9 @@ package UnitFinder;
 import Visualizer.GraphVisualizer;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.graph.implementations.MultiNode;
 import org.graphstream.ui.view.Viewer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -26,17 +24,21 @@ public class UnitFinderUI {
 	//Method Traversal@get Module Break Test EX-to-3(SS)*S, 19$145178
 
     private static HashMap<String, Node> tree = DataParser.readFile("AllTime.csv");
-    private static Graph graph = new MultiGraph("unit graph");
+    private static Graph graph = GraphVisualizer.createGraph();
 
     public static void main(String[] args) {
         Viewer viewer = graph.display();
+        System.out.println("layout.stabilization-limit: " + graph.getAttribute("layout.stabilization-limit"));
+        
         while (true) {        	
             System.out.println("[1] Graph Unit");
-            System.out.println("[2] Expand Node");
-            System.out.println("[3] Expand All On-Screen Nodes");
-            System.out.println("[4] Graph Module");
-            System.out.println("[5] Module Data Consistency Check");
-            System.out.println("[6] Quit");
+            System.out.println("[2] Expand Children Of Node");
+            System.out.println("[3] Expand Children of All On-Screen Nodes");
+            System.out.println("[4] Expand Parents Of Node");
+            System.out.println("[5] Expand Parents of All On-Screen Nodes");
+            System.out.println("[6] Graph Module");
+            System.out.println("[7] Module Data Consistency Check");
+            System.out.println("[8] Quit");
 
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
@@ -46,19 +48,28 @@ public class UnitFinderUI {
                 String instanceId = sc.nextLine();
                 graphUnit(instanceId);
             } else if (input.equalsIgnoreCase("2")){
-                System.out.print("Enter a node to expand : " );
+                System.out.print("Enter a node to expand children: " );
                 String expandNode=sc.nextLine();
-                expandNode(expandNode, getAllGraphedNodeIDs());
+                expandNodeChildren(expandNode, getAllGraphedNodeIDs());
             } else if (input.equalsIgnoreCase("3")){
             	HashSet<String> graphedNodeIDs = getAllGraphedNodeIDs();
             	for (String nodeID : graphedNodeIDs) {
-            		expandNode(nodeID, graphedNodeIDs);
+            		expandNodeChildren(nodeID, graphedNodeIDs);
             	}
             } else if (input.equalsIgnoreCase("4")){
-            	ModuleMapper.mapModule(graph, tree);
+                System.out.print("Enter a node to expand parents: " );
+                String expandNode=sc.nextLine();
+                expandNodeParents(expandNode, getAllGraphedNodeIDs());
             } else if (input.equalsIgnoreCase("5")){
+            	HashSet<String> graphedNodeIDs = getAllGraphedNodeIDs();
+            	for (String nodeID : graphedNodeIDs) {
+            		expandNodeParents(nodeID, graphedNodeIDs);
+            	}
+            } else if (input.equalsIgnoreCase("6")){
+            	ModuleMapper.mapModule(graph, tree);
+            } else if (input.equalsIgnoreCase("7")){
             	ConsistencyTest.runConsistencyTest(tree);
-            } else if(input.equalsIgnoreCase("6")){
+            } else if(input.equalsIgnoreCase("8")){
                 viewer.close();
                 sc.close();
                 // break out of all execution, including main thread and AWT.
@@ -82,21 +93,30 @@ public class UnitFinderUI {
 
     /* This will not fail, but it won't be quite right when there are multiple children in the same unit
      * Need some slight refactoring */
-    private static void expandNode(String instanceId, HashSet<String> alreadyDisplayedNodes){
-        System.out.println("Expand Node " + instanceId);
+    private static void expandNodeChildren(String instanceId, HashSet<String> alreadyDisplayedNodes){
+        System.out.println("Expand Node Children " + instanceId);
         Node expandingNode = tree.get(instanceId);
-        // get the children of the current node
-        ArrayList <Node> children = expandingNode.children;
-        // for all the children, graph the units
-
-        for(Node child : children) {
+        // get the children of the current node and graph their units
+        for(Node child : expandingNode.children) {
         	if (alreadyDisplayedNodes.contains(child.getId())) continue;
             graphUnit(child.getId());
-
             // now add an edge between the source and the child node
-            GraphVisualizer.addEdge(graph, expandingNode, child);
+            //GraphVisualizer.addEdge(graph, expandingNode, child);
         }
     }
+    
+    private static void expandNodeParents(String instanceId, HashSet<String> alreadyDisplayedNodes){
+        System.out.println("Expand Node Parents " + instanceId);
+        Node expandingNode = tree.get(instanceId);
+        // get the children of the current node and graph their units
+        for(Node parent : expandingNode.parents) {
+        	if (alreadyDisplayedNodes.contains(parent.getId())) continue;
+            graphUnit(parent.getId());
+            // now add an edge between the source and the child node
+            //GraphVisualizer.addEdge(graph, expandingNode, child);
+        }
+    }
+
 
     private static void graphUnit(String instanceId){
 
