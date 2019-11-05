@@ -46,11 +46,11 @@ public class UnitFinderUI {
 
             if (input.equalsIgnoreCase("1")) {
                 System.out.print("\t Enter an Instance ID : ");
-                String instanceId = sc.nextLine();
+                String instanceId = sanitizeMethodInput(sc);
                 graphUnit(instanceId);
             } else if (input.equalsIgnoreCase("2")){
                 System.out.print("Enter a node to expand children: " );
-                String expandNode=sc.nextLine();
+                String expandNode=sanitizeMethodInput(sc);
                 expandNodeChildren(expandNode, getAllGraphedNodeIDs());
             } else if (input.equalsIgnoreCase("3")){
             	HashSet<String> graphedNodeIDs = getAllGraphedNodeIDs();
@@ -59,7 +59,7 @@ public class UnitFinderUI {
             	}
             } else if (input.equalsIgnoreCase("4")){
                 System.out.print("Enter a node to expand parents: " );
-                String expandNode=sc.nextLine();
+                String expandNode=sanitizeMethodInput(sc);
                 expandNodeParents(expandNode, getAllGraphedNodeIDs());
             } else if (input.equalsIgnoreCase("5")){
             	HashSet<String> graphedNodeIDs = getAllGraphedNodeIDs();
@@ -77,9 +77,12 @@ public class UnitFinderUI {
                 // can cause problems if this is not the only thing executing on the JVM.
                 System.exit(0);
             }
-
         }
-
+    }
+    
+    private static String sanitizeMethodInput(Scanner sc) {
+    	String str = sc.nextLine().trim().replace('.', '$');
+    	return str;
     }
     
     private static HashSet<String> getAllGraphedNodeIDs(){
