@@ -100,6 +100,7 @@ public class UnitFinderUI {
     private static void expandNodeChildren(String instanceId, HashSet<String> alreadyDisplayedNodes){
         System.out.println("Expand Node Children " + instanceId);
         Node expandingNode = tree.get(instanceId);
+        if (expandingNode == null) return;
         // get the children of the current node and graph their units
         for(Node child : expandingNode.children) {
         	if (alreadyDisplayedNodes.contains(child.getId())) continue;
@@ -112,6 +113,7 @@ public class UnitFinderUI {
     private static void expandNodeParents(String instanceId, HashSet<String> alreadyDisplayedNodes){
         System.out.println("Expand Node Parents " + instanceId);
         Node expandingNode = tree.get(instanceId);
+        if (expandingNode == null) return;
         // get the children of the current node and graph their units
         for(Node parent : expandingNode.parents) {
         	if (alreadyDisplayedNodes.contains(parent.getId())) continue;
