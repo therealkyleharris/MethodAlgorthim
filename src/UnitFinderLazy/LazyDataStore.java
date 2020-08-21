@@ -13,10 +13,16 @@ public class LazyDataStore {
         if (savedNodes.containsKey(instanceId))return savedNodes.get(instanceId);
         Node dataNode = csvTree.get(instanceId);
         if (dataNode == null) return null;
-        LazyNode node = new LazyNode(instanceId, dataNode.getName(), dataNode.getModule());
+        LazyNode node = new LazyNode(instanceId);
         savedNodes.put(instanceId, node);
         System.out.println("Create node " + instanceId);
         return node;
+    }
+
+    public static String retrieveModule(LazyNode node){
+        Node csvNode = csvTree.get(node.id);
+        if (csvNode == null) return null;
+        return csvNode.getModule();
     }
 
     public static ArrayList<LazyNode> retrieveParents(LazyNode node){

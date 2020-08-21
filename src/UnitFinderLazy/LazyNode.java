@@ -6,14 +6,20 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class LazyNode {
-    //A LazyNode always has id, name, and module values, but parents and children are populated on request.
-    public String id, name, module;
+    public String id;
+    private String module = null;
     private ArrayList<LazyNode> parents = null, children = null;
 
-    public LazyNode(String instanceId, String name, String module){
+    public LazyNode(String instanceId){
         this.id = instanceId;
-        this.name = name;
-        this.module = module;
+    }
+
+    public String getModule(){
+        if (module != null) {
+            return module;
+        }
+        module = LazyDataStore.retrieveModule(this);
+        return module;
     }
 
     public ArrayList<LazyNode> getParents(){
@@ -41,12 +47,12 @@ public class LazyNode {
     }
 
     private Collection<LazyNode> getNodesOfGivenModule(Collection<LazyNode> nodes){
-        Predicate<LazyNode> nodeFilter = item -> item.module.equals(this.module);
+        Predicate<LazyNode> nodeFilter = item -> item.getModule().equals(this.getModule());
         return nodes.stream().filter(nodeFilter).collect(Collectors.toList());
     }
 
     @Override
     public String toString() {
-        return id + " - M:" + module + " - P:" + getParents().size() + ", C:" + getChildren().size() + " - " + name;
+        return id + " - M:" + getModule() + " - P:" + getParents().size() + ", C:" + getChildren().size();
     }
 }

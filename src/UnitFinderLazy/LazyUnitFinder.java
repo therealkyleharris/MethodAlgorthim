@@ -7,28 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class LazyUnitFinder {
-
-    public static void graphUnit(Graph graph, String instanceId){
-
-        try {
-            // check if the instance id is valid
-            LazyNode startingMethod = LazyDataStore.getNode(instanceId);
-            if (startingMethod != null) {
-                System.out.println("Running on  :" + instanceId);
-                LazyUnit unit = findUnit(startingMethod);
-                for (LazyNode node : unit.getNodes()) {
-                    System.out.println(node);
-                }
-                LazyGraphVisualizer.addUnitToGraph(graph, unit);
-            }else{
-                System.out.println("Invalid Instance ID ");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected static LazyUnit findUnit(LazyNode startingMethod) {
+    public static LazyUnit findUnit(LazyNode startingMethod) {
         //Get a list for all local roots above the given method
         if (startingMethod == null) return null;
         HashSet<LazyNode> localRoots = new HashSet<>();

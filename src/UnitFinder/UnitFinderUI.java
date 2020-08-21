@@ -1,8 +1,11 @@
 package UnitFinder;
+import UnitFinderLazy.LazyNode;
+import UnitFinderLazy.LazyUnit;
 import UnitFinderLazy.LazyUnitFinder;
 import UnitFinderLazy.LazyDataStore;
 import Visualizer.GraphVisualizer;
 
+import Visualizer.LazyGraphVisualizer;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiNode;
 import org.graphstream.ui.view.Viewer;
@@ -78,7 +81,7 @@ public class UnitFinderUI {
             } else if (input.equalsIgnoreCase("8")){
                 System.out.print("\t Enter an Instance ID : ");
                 String instanceId = sanitizeMethodInput(sc);
-                LazyUnitFinder.graphUnit(graph, instanceId);
+                graphUnitLazy(instanceId);
                 //24.27452
                 //29.78127
             } else if(input.equalsIgnoreCase("9")){
@@ -170,4 +173,23 @@ public class UnitFinderUI {
 			GraphVisualizer.addDataToGraph(graph, unit.getNodes(), unit.getRoot());
 		}
 	}
+
+    private static void graphUnitLazy(String instanceId){
+        try {
+            // check if the instance id is valid
+            LazyNode startingMethod = LazyDataStore.getNode(instanceId);
+            if (startingMethod != null) {
+                System.out.println("Running on  :" + instanceId);
+                LazyUnit unit = LazyUnitFinder.findUnit(startingMethod);
+                for (LazyNode node : unit.getNodes()) {
+                    System.out.println(node);
+                }
+                LazyGraphVisualizer.addUnitToGraph(graph, unit);
+            }else{
+                System.out.println("Invalid Instance ID ");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -62,7 +62,7 @@ public class LazyGraphVisualizer {
             graph.addEdge(edgeName, parent.id, child.id, true);
             Edge e = graph.getEdge(edgeName);
             e.setAttribute("directed", true);
-            String edgeColor = parent.module.equals(child.module) ? BLACK : RED;
+            String edgeColor = parent.getModule().equals(child.getModule()) ? BLACK : RED;
             e.setAttribute("ui.style", edgeColor);
         }
     }
