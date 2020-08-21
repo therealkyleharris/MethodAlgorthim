@@ -1,4 +1,6 @@
 package UnitFinder;
+import UnitFinderLazy.LazyUnitFinder;
+import UnitFinderLazy.LazyDataStore;
 import Visualizer.GraphVisualizer;
 
 import org.graphstream.graph.Graph;
@@ -30,7 +32,9 @@ public class UnitFinderUI {
     public static void main(String[] args) {
         Viewer viewer = graph.display();
         System.out.println("layout.stabilization-limit: " + graph.getAttribute("layout.stabilization-limit"));
-        
+
+        LazyUnitFinder.dataStore = new LazyDataStore(tree);
+
         while (true) {        	
             System.out.println("[1] Graph Unit");
             System.out.println("[2] Expand Children Of Node");
@@ -39,7 +43,8 @@ public class UnitFinderUI {
             System.out.println("[5] Expand Parents of All On-Screen Nodes");
             System.out.println("[6] Graph Module");
             System.out.println("[7] Module Data Consistency Check");
-            System.out.println("[8] Quit");
+            System.out.println("[8] Graph Unit - Lazy");
+            System.out.println("[9] Quit");
 
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
@@ -70,7 +75,11 @@ public class UnitFinderUI {
             	mapModule(graph, tree);
             } else if (input.equalsIgnoreCase("7")){
             	ConsistencyTest.runConsistencyTest(tree);
-            } else if(input.equalsIgnoreCase("8")){
+            } else if (input.equalsIgnoreCase("8")){
+                System.out.print("\t Enter an Instance ID : ");
+                String instanceId = sanitizeMethodInput(sc);
+                LazyUnitFinder.graphUnit(graph, instanceId);
+            } else if(input.equalsIgnoreCase("9")){
                 viewer.close();
                 sc.close();
                 // break out of all execution, including main thread and AWT.
@@ -143,7 +152,6 @@ public class UnitFinderUI {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
     
 	private static void mapModule(Graph graph, HashMap<String, Node> tree) {

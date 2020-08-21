@@ -1,6 +1,7 @@
 package Visualizer;
 import java.util.Collection;
 import java.util.Random;
+
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.MultiGraph;
 

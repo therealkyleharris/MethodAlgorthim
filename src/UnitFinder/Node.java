@@ -31,6 +31,10 @@ public class Node {
 		return this.id;
 	}
 
+	public String getModule(){
+		return this.module;
+	}
+
 	public ArrayList<Node> getParents(){
 		return this.parents;
 	}
