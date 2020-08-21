@@ -4,7 +4,6 @@ import UnitFinderLazy.LazyNode;
 import UnitFinderLazy.LazyUnit;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.MultiGraph;
 
 import java.util.Collection;
 import java.util.Random;
@@ -29,12 +28,12 @@ public class LazyGraphVisualizer {
         for (LazyNode node : nodes) {
 
             // only add the node if it doesn't exist
-            if(graph.getNode(node.getId())==null) {
-                graph.addNode(node.getId());
+            if(graph.getNode(node.id)==null) {
+                graph.addNode(node.id);
             }
-            String label = node == root ? "ROOT : " + node.getId() : node.getId();
-            graph.getNode(node.getId()).setAttribute("ui.label", label);
-            graph.getNode(node.getId()).setAttribute("ui.style", color);
+            String label = node == root ? "ROOT : " + node.id : node.id;
+            graph.getNode(node.id).setAttribute("ui.label", label);
+            graph.getNode(node.id).setAttribute("ui.style", color);
 
             // make the nodes a pretty color
         }
@@ -52,18 +51,18 @@ public class LazyGraphVisualizer {
     }
 
     public static void addEdge(Graph graph, LazyNode parent, LazyNode child) {
-        if (graph.getNode(parent.getId()) == null || graph.getNode(child.getId()) == null) {
+        if (graph.getNode(parent.id) == null || graph.getNode(child.id) == null) {
             //If an origin or destination of this edge is not on the graph,
             // as will happen when trying to connect the unit to outside nodes that haven't been added yet,
             // do nothing.
             return;
         }
-        String edgeName = (parent.getId() + "--" + child.getId());
+        String edgeName = (parent.id + "--" + child.id);
         if (graph.getEdge(edgeName) == null) {
-            graph.addEdge(edgeName, parent.getId(), child.getId(), true);
+            graph.addEdge(edgeName, parent.id, child.id, true);
             Edge e = graph.getEdge(edgeName);
             e.setAttribute("directed", true);
-            String edgeColor = parent.getModule().equals(child.getModule()) ? BLACK : RED;
+            String edgeColor = parent.module.equals(child.module) ? BLACK : RED;
             e.setAttribute("ui.style", edgeColor);
         }
     }

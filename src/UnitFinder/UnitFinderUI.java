@@ -33,7 +33,7 @@ public class UnitFinderUI {
         Viewer viewer = graph.display();
         System.out.println("layout.stabilization-limit: " + graph.getAttribute("layout.stabilization-limit"));
 
-        LazyUnitFinder.dataStore = new LazyDataStore(tree);
+        LazyDataStore.csvTree = tree;
 
         while (true) {        	
             System.out.println("[1] Graph Unit");
@@ -79,6 +79,8 @@ public class UnitFinderUI {
                 System.out.print("\t Enter an Instance ID : ");
                 String instanceId = sanitizeMethodInput(sc);
                 LazyUnitFinder.graphUnit(graph, instanceId);
+                //24.27452
+                //29.78127
             } else if(input.equalsIgnoreCase("9")){
                 viewer.close();
                 sc.close();
@@ -90,8 +92,7 @@ public class UnitFinderUI {
     }
     
     private static String sanitizeMethodInput(Scanner sc) {
-    	String str = sc.nextLine().trim().replace('.', '$');
-    	return str;
+    	return sc.nextLine().trim().replace('.', '$');
     }
     
     private static HashSet<String> getAllGraphedNodeIDs(){

@@ -10,17 +10,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class LazyUnitFinder {
-    public static LazyDataStore dataStore = null;
 
     public static void graphUnit(Graph graph, String instanceId){
 
         try {
             // check if the instance id is valid
-            if (dataStore.hasNode(instanceId)) {
+            LazyNode startingMethod = LazyDataStore.getNode(instanceId);
+            if (startingMethod != null) {
                 System.out.println("Running on  :" + instanceId);
-                LazyNode startingMethod = dataStore.getNode(instanceId);
                 LazyUnit unit = findUnit(startingMethod);
-                //Unit unitTrimmed = removeExternalParentsAndChildren(unit);
                 for (LazyNode node : unit.getNodes()) {
                     System.out.println(node);
                 }
@@ -83,9 +81,6 @@ public class LazyUnitFinder {
     /**
      * Find all descendants of a method INCLUDING ITSELF
      * While traversing descendants, do not enter a specific node
-     * @param currentMethod
-     * @param descendants
-     * @param block
      */
     private static void findAllDescendantsOfMethodWithBlock(LazyNode currentMethod, HashSet<LazyNode> descendants, LazyNode block){
         descendants.add(block);
@@ -95,8 +90,6 @@ public class LazyUnitFinder {
 
     /**
      * Return all descendants of a method INCLUDING ITSELF in the same module
-     * @param currentMethod
-     * @param descendants
      */
     private static void findAllDescendantsOfMethod(LazyNode currentMethod, HashSet<LazyNode> descendants){
         if (descendants.contains(currentMethod)) return;
@@ -112,7 +105,6 @@ public class LazyUnitFinder {
      * is called by a node outside of the list
      * To trim a list of nodes to a unit, get all nodes with outside callers
      * Then, remove those node and all their children from the list
-     * @return
      */
     private static void trimListToAUnit(HashSet<LazyNode> list, LazyNode root) {
         HashSet<LazyNode> nodesWithOutsideCallers = new HashSet<>();

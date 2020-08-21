@@ -1,33 +1,47 @@
 package UnitFinderLazy;
 
-import UnitFinder.DataParser;
 import UnitFinder.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LazyDataStore {
-    private HashMap<String, Node> csvTree;
-    private HashMap<String, LazyNode> savedNodes = new HashMap<>();
+    public static HashMap<String, Node> csvTree;
+    private static HashMap<String, LazyNode> savedNodes = new HashMap<>();
 
-    public LazyDataStore(HashMap<String, Node> csvTree){
-        this.csvTree = csvTree;
-    }
-
-    public LazyNode getNode(String instanceId){
+    public static LazyNode getNode(String instanceId){
         if (savedNodes.containsKey(instanceId))return savedNodes.get(instanceId);
-        if (doesNodeExist(instanceId)){
-            LazyNode node = new LazyNode(instanceId, csvTree);
-            savedNodes.put(instanceId, node);
-            return node;
+        Node dataNode = csvTree.get(instanceId);
+        if (dataNode == null) return null;
+        LazyNode node = new LazyNode(instanceId, dataNode.getName(), dataNode.getModule());
+        savedNodes.put(instanceId, node);
+        System.out.println("Create node " + instanceId);
+        return node;
+    }
+
+    public static ArrayList<LazyNode> retrieveParents(LazyNode node){
+        Node csvNode = csvTree.get(node.id);
+        if (csvNode == null) return null;
+        ArrayList<Node> dataStoreParents = csvNode.getParents();
+        ArrayList<LazyNode> parents = new ArrayList<>();
+        LazyNode parent;
+        for (Node dataStoreParent : dataStoreParents){
+            parent = getNode(dataStoreParent.getId());
+            parents.add(parent);
         }
-        return null;
+        return parents;
     }
 
-    public boolean hasNode(String instanceId){
-        return getNode(instanceId) != null;
-    }
-
-    private boolean doesNodeExist(String instanceId){
-        return csvTree.containsKey(instanceId);
+    public static ArrayList<LazyNode> retrieveChildren(LazyNode node){
+        Node csvNode = csvTree.get(node.id);
+        if (csvNode == null) return null;
+        ArrayList<Node> dataStoreChildren = csvNode.getChildren();
+        ArrayList<LazyNode> children = new ArrayList<>();
+        LazyNode child;
+        for (Node dataStoreChild : dataStoreChildren){
+            child = getNode(dataStoreChild.getId());
+            children.add(child);
+        }
+        return children;
     }
 }
