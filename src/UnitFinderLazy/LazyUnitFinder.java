@@ -1,8 +1,5 @@
 package UnitFinderLazy;
 
-import Visualizer.LazyGraphVisualizer;
-import org.graphstream.graph.Graph;
-
 import java.util.Collection;
 import java.util.HashSet;
 
