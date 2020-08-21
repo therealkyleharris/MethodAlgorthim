@@ -1,12 +1,9 @@
 package UnitFinderLazy;
 
-import UnitFinder.Node;
-import Visualizer.GraphVisualizer;
 import Visualizer.LazyGraphVisualizer;
 import org.graphstream.graph.Graph;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class LazyUnitFinder {
