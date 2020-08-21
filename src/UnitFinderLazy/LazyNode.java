@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class LazyNode {
-    //A L=azyNode always has id, name, and module values, but parents and children are populated on request.
+    //A LazyNode always has id, name, and module values, but parents and children are populated on request.
     public String id, name, module;
     private ArrayList<LazyNode> parents = null, children = null;
 
