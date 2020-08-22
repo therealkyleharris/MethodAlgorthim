@@ -53,6 +53,7 @@ public class LazyNode {
 
     @Override
     public String toString() {
-        return id + " - M:" + getModule() + " - P:" + getParents().size() + ", C:" + getChildren().size();
+        //return id + " - M:" + getModule() + " - P:" + getParents().size() + ", C:" + getChildren().size();
+        return id;
     }
 }
