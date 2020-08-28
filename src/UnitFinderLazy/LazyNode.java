@@ -9,16 +9,18 @@ public class LazyNode {
     public String id;
     private String module = null;
     private ArrayList<LazyNode> parents = null, children = null;
+    private LazyDataStore lazyDataStore;
 
-    public LazyNode(String instanceId){
+    public LazyNode(String instanceId, LazyDataStore lazyDataStore){
         this.id = instanceId;
+        this.lazyDataStore = lazyDataStore;
     }
 
     public String getModule(){
         if (module != null) {
             return module;
         }
-        module = LazyDataStore.retrieveModule(this);
+        module = lazyDataStore.retrieveModule(this);
         return module;
     }
 
@@ -26,7 +28,7 @@ public class LazyNode {
         if (parents != null){
             return parents;
         }
-        parents = LazyDataStore.retrieveParents(this);
+        parents = lazyDataStore.retrieveParents(this);
         return parents;
     }
 
@@ -34,7 +36,7 @@ public class LazyNode {
         if (children != null){
             return children;
         }
-        children = LazyDataStore.retrieveChildren(this);
+        children = lazyDataStore.retrieveChildren(this);
         return children;
     }
 

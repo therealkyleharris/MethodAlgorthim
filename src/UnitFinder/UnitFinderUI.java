@@ -36,8 +36,6 @@ public class UnitFinderUI {
         Viewer viewer = graph.display();
         System.out.println("layout.stabilization-limit: " + graph.getAttribute("layout.stabilization-limit"));
 
-        LazyDataStore.csvTree = tree;
-
         while (true) {        	
             System.out.println("[1] Graph Unit");
             System.out.println("[2] Expand Children Of Node");
@@ -81,7 +79,7 @@ public class UnitFinderUI {
             } else if (input.equalsIgnoreCase("8")){
                 System.out.print("\t Enter an Instance ID : ");
                 String instanceId = sanitizeMethodInput(sc);
-                graphUnitLazy(instanceId);
+                graphUnitLazy(instanceId, tree);
                 //24.27452
                 //29.78127
             } else if(input.equalsIgnoreCase("9")){
@@ -160,7 +158,7 @@ public class UnitFinderUI {
     
 	private static void mapModule(Graph graph, HashMap<String, Node> tree) {
 		Collection<Node> nodes = tree.values();
-		HashSet<Node> visitedNodes = new HashSet<Node>();
+		HashSet<Node> visitedNodes = new HashSet<>();
 		int count = 0;
 		System.out.println("Mapping Nodes to Units: " + nodes.size());
 		for (Node node : nodes) {
@@ -174,10 +172,12 @@ public class UnitFinderUI {
 		}
 	}
 
-    private static void graphUnitLazy(String instanceId){
+    private static void graphUnitLazy(String instanceId, HashMap<String, Node> tree){
         try {
             // check if the instance id is valid
-            LazyNode startingMethod = LazyDataStore.getNode(instanceId);
+            LazyDataStore lazyDataStore = new LazyDataStore();
+            lazyDataStore.csvTree = tree;
+            LazyNode startingMethod = lazyDataStore.getNode(instanceId);
             if (startingMethod != null) {
                 System.out.println("Running on  :" + instanceId);
                 LazyUnit unit = LazyUnitFinder.findUnit(startingMethod);
